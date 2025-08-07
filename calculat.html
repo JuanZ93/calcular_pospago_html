@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Cálculo de Valores desde Tabla</title>
+  <style>
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #333; padding: 8px; text-align: center; }
+    th { background-color: #f0f0f0; }
+    input { width: 80px; }
+  </style>
+</head>
+<body>
+  <h2>Tabla con Cálculos de Tarifa por Uso</h2>
+  <table id="tabla">
+    <thead>
+      <tr>
+        <th>Código</th>
+        <th>Factura</th>
+        <th>Fecha</th>
+        <th>Debe</th>
+        <th>Haber</th>
+        <th>Tarifa Inicial</th>
+        <th>Días Mes</th>
+        <th>Días No Uso</th>
+        <th>Días Uso</th>
+        <th>Tarifa por Uso</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- FILAS INSERTADAS POR JS -->
+    </tbody>
+  </table>
+  <br>
+  <button onclick="calcular()">Calcular Tarifas</button>
+
+  <script>
+    const datos = [
+      {
+        codigo: 1,
+        factura: 1,
+        fecha: "2025-08-01",
+        debe: 60.666667,
+        haber: 0,
+        tarifa_inicial: 70,
+        dias_mes: 30,
+        dias_no_uso: 4,
+        dias_uso: 26
+      }
+    ];
+
+    const tbody = document.querySelector("#tabla tbody");
+
+    datos.forEach((fila, index) => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${fila.codigo}</td>
+        <td>${fila.factura}</td>
+        <td>${fila.fecha}</td>
+        <td><input type="number" value="${fila.debe}" id="debe${index}"></td>
+        <td><input type="number" value="${fila.haber}" id="haber${index}"></td>
+        <td><input type="number" value="${fila.tarifa_inicial}" id="tarifa${index}"></td>
+        <td><input type="number" value="${fila.dias_mes}" id="diasmes${index}"></td>
+        <td><input type="number" value="${fila.dias_no_uso}" id="diasno${index}"></td>
+        <td><input type="number" value="${fila.dias_uso}" id="diasuso${index}"></td>
+        <td><span id="tarifauso${index}">-</span></td>
+      `;
+      tbody.appendChild(tr);
+    });
+
+    function calcular() {
+      datos.forEach((_, index) => {
+        const tarifa = parseFloat(document.getElementById(`tarifa${index}`).value);
+        const diasMes = parseFloat(document.getElementById(`diasmes${index}`).value);
+        const diasUso = parseFloat(document.getElementById(`diasuso${index}`).value);
+
+        const tarifaUso = ((tarifa / diasMes) * diasUso).toFixed(2);
+        document.getElementById(`tarifauso${index}`).innerText = tarifaUso;
+      });
+    }
+  </script>
+</body>
+</html>
